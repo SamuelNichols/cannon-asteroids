@@ -59,7 +59,7 @@ class Game:
                 d.draw(self.screen)
             for a in asteroids:
                 if a.is_colliding(player):
-                    # self.game_over()
+                    self.game_over()
                     pass
                 else:
                     for s in shots:

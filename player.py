@@ -27,17 +27,8 @@ class Player(CircleShape):
     def move(self, dt):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
         self.position += forward * constants.PLAYER_SPEED * dt
-
-    def triangle(self):
-        forward = pygame.Vector2(0, 1).rotate(self.rotation)
-        right = pygame.Vector2(0, 1).rotate(self.rotation + 90) * self.radius / 1.5
-        a = self.position + forward * self.radius
-        b = self.position - forward * self.radius - right
-        c = self.position - forward * self.radius + right
-        return [a, b, c]
     
     def draw(self, screen):
-        pygame.draw.polygon(screen, self.color, self.triangle(), self.line_width)
         self.idle_sprite.blit(screen, self.position, self.rotation)
         super().draw(screen)
 
