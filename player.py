@@ -1,5 +1,6 @@
 import pygame
 import constants
+import assets.asteroids_ss as a_ss
 from circleshape import CircleShape
 from shot import Shot
 
@@ -7,15 +8,18 @@ class Player(CircleShape):
     def __init__(self, x, y, color=constants.PLAYER_COLOR, lw=constants.PLAYER_LINE_WIDTH):
         super().__init__(x, y, constants.PLAYER_RADIUS)
         self.rotation = 0
-        self.__shoot_cooldown = 0
-        self.__color = color
-        self.__line_width = lw
+        self.shoot_cooldown = 0
+        self.color = color
+        self.line_width = lw
+        self.idle_sprite = a_ss.ASTEROID_SS.create_sprite(a_ss.IDLE_SHIP_RECT, 1, 90)
+        self.moving_sprite = a_ss.ASTEROID_SS.create_sprite(a_ss.MOVING_SHIP_RECT, 1, 90)
+        self.show_hitbox = True
 
     def set_color(self, color):
-        self.__color = color
+        self.color = color
 
     def set_line_width(self, lw):
-        self.__line_width = lw
+        self.line_width = lw
 
     def rotate(self, dt):
         self.rotation += constants.PLAYER_TURN_SPEED * dt
@@ -33,11 +37,13 @@ class Player(CircleShape):
         return [a, b, c]
     
     def draw(self, screen):
-        pygame.draw.polygon(screen, self.__color, self.triangle(), self.__line_width)
+        pygame.draw.polygon(screen, self.color, self.triangle(), self.line_width)
+        self.idle_sprite.blit(screen, self.position, self.rotation)
+        super().draw(screen)
 
     def update(self, dt):
         # handling shot rate limit
-        self.__shoot_cooldown -= dt
+        self.shoot_cooldown -= dt
 
         # handling key presses
         keys = pygame.key.get_pressed()
@@ -62,7 +68,7 @@ class Player(CircleShape):
             self.shoot(dt)
 
     def shoot(self, dt):
-        if self.__shoot_cooldown <= 0:
+        if self.shoot_cooldown <= 0:
             s = Shot(self.position.x, self.position.y)
             s.velocity = pygame.Vector2(0, 1).rotate(self.rotation) * constants.PLAYER_SHOOT_SPEED
-            self.__shoot_cooldown = constants.PLAYER_SHOOT_COOLDOWN
+            self.shoot_cooldown = constants.PLAYER_SHOOT_COOLDOWN

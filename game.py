@@ -4,11 +4,13 @@ from player import Player
 from asteroid import Asteroid
 from asteroidfield import AsteroidField
 from shot import Shot
+from spritesheet import SpriteSheet, Sprite
 
 class Game:
     def __init__(self):
         pygame.init()
         self.running = False
+        self.canvas = pygame.Surface((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT))
         self.screen = pygame.display.set_mode((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT))
         self.clock = pygame.time.Clock()
         self.dt = 0
@@ -43,6 +45,9 @@ class Game:
         player = Player(constants.SCREEN_WIDTH/2, constants.SCREEN_HEIGHT/2)
         _asteroid_field = AsteroidField()
 
+        self.idle = True
+        self.idle_timer = 0.1
+
         # begin game loop
         self.running = True
         while self.running:
@@ -54,7 +59,8 @@ class Game:
                 d.draw(self.screen)
             for a in asteroids:
                 if a.is_colliding(player):
-                    self.game_over()
+                    # self.game_over()
+                    pass
                 else:
                     for s in shots:
                         if a.is_colliding(s):

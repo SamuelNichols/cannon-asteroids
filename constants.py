@@ -1,3 +1,7 @@
+# Debug
+HITBOX_COLOR = "red"
+
+# Runtime
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
 

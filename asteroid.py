@@ -1,11 +1,15 @@
 import pygame
 import random
 import constants
+import assets.asteroids_ss as a_ss
+from spritesheet import SpriteSheet, Sprite
 from circleshape import CircleShape
 
 class Asteroid(CircleShape):
     def __init__(self, x, y, radius):
         super().__init__(x, y, radius)
+        kind = radius // constants.ASTEROID_MIN_RADIUS
+        # self.sprite = a_ss.ASTEROID_SS.create_sprite(())
 
     def draw(self, screen):
         pygame.draw.circle(screen, constants.ASTEROID_COLOR, pygame.Vector2(self.position.x, self.position.y), self.radius, width=2)
