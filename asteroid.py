@@ -29,7 +29,6 @@ class Asteroid(CircleShape):
         self.position += self.velocity * dt
         if self.rotation >= 360 or self.rotation <= -360:
             self.rotation = 0
-        
         self.rotation += self.rotation_speed
 
     def split(self):

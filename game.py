@@ -45,12 +45,10 @@ class Game:
         player = Player(constants.SCREEN_WIDTH/2, constants.SCREEN_HEIGHT/2)
         _asteroid_field = AsteroidField()
 
-        self.idle = True
-        self.idle_timer = 0.1
-
         # begin game loop
         self.running = True
         while self.running:
+            # TODO: make background spacey
             self.screen.fill("black")
 
             for u in updatable:
@@ -59,7 +57,7 @@ class Game:
                 d.draw(self.screen)
             for a in asteroids:
                 if a.is_colliding(player):
-                    self.game_over()
+                    # self.game_over()
                     pass
                 else:
                     for s in shots:

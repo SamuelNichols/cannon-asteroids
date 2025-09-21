@@ -9,32 +9,35 @@ class Player(CircleShape):
         super().__init__(x, y, constants.PLAYER_RADIUS)
         self.rotation = 0
         self.shoot_cooldown = 0
-        self.color = color
-        self.line_width = lw
         self.idle_sprite = a_ss.ASTEROID_SS.create_sprite(a_ss.IDLE_SHIP_RECT, 1, 90)
         self.moving_sprite = a_ss.ASTEROID_SS.create_sprite(a_ss.MOVING_SHIP_RECT, 1, 90)
         self.show_hitbox = True
+        self.velocity = 0
 
-    def set_color(self, color):
-        self.color = color
-
-    def set_line_width(self, lw):
-        self.line_width = lw
+    def draw(self, screen):
+        self.idle_sprite.blit(screen, self.position, self.rotation)
+        super().draw(screen) 
 
     def rotate(self, dt):
         self.rotation += constants.PLAYER_TURN_SPEED * dt
 
+    def accelerate(self, forward, speed):
+        if forward:
+            if not self.velocity >= constants.PLAYER_MAX_SPEED:
+                self.velocity += speed
+        else:
+            if not self.velocity <= -constants.PLAYER_MAX_SPEED:
+                self.velocity -= speed
+
     def move(self, dt):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
-        self.position += forward * constants.PLAYER_SPEED * dt
+        self.position += forward * self.velocity * dt
     
-    def draw(self, screen):
-        self.idle_sprite.blit(screen, self.position, self.rotation)
-        super().draw(screen)
-
     def update(self, dt):
         # handling shot rate limit
         self.shoot_cooldown -= dt
+        # handling move with current velocity
+        self.move(dt)
 
         # handling key presses
         keys = pygame.key.get_pressed()
@@ -47,14 +50,15 @@ class Player(CircleShape):
         if keys[pygame.K_d]:
             self.rotate(dt)
         
-        # move up
-        if keys[pygame.K_w]:
-            self.move(dt)
-
-        # move down
-        if keys[pygame.K_s]:
-            self.move(-dt)
-
+        if keys[pygame.K_w]: # move up
+            self.accelerate(True, constants.PLAYER_ACCELERATE_SPEED) 
+        elif keys[pygame.K_s]: # move down
+            self.accelerate(False, constants.PLAYER_ACCELERATE_SPEED)
+        else: # decelerate in opposite direction
+            if self.velocity > 0:
+                self.accelerate(False, constants.PLAYER_DECELERATE_SPEED)
+            elif self.velocity < 0:
+                self.accelerate(True, constants.PLAYER_DECELERATE_SPEED)
         if keys[pygame.K_SPACE]:
             self.shoot(dt)
 
