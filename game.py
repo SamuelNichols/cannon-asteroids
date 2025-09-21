@@ -12,6 +12,7 @@ class Game:
         self.running = False
         self.canvas = pygame.Surface((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT))
         self.screen = pygame.display.set_mode((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT))
+        self.screen_rect = self.screen.get_rect()
         self.clock = pygame.time.Clock()
         self.dt = 0
 
@@ -56,15 +57,22 @@ class Game:
             for d in drawable:
                 d.draw(self.screen)
             for a in asteroids:
+                # asteroid cleanup
+                if not self.screen_rect.colliderect(a.get_rect()):
+                    a.kill()
                 if a.is_colliding(player):
-                    # self.game_over()
-                    pass
+                    self.game_over()
                 else:
                     for s in shots:
                         if a.is_colliding(s):
                             a.split()
                             s.kill()
-
+            
+            for s in shots:
+                # shot cleanup
+                if not self.screen_rect.colliderect(s.get_rect()):
+                    s.kill()
+            
             pygame.display.flip()
             # handle events
             self.handle_event()

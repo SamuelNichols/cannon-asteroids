@@ -46,3 +46,5 @@ class Asteroid(CircleShape):
         split_ast_2.velocity = self.velocity.rotate(-split_angle) * constants.ASTEROID_SPLIT_SPEED_MULT
         split_ast_2.rotation_speed = split_rotation_speed_2
 
+    def get_rect(self):
+        return self.sprite.pos.move(self.position.x - self.sprite.width / 2, self.position.y - self.sprite.height / 2)

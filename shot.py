@@ -11,3 +11,6 @@ class Shot(CircleShape):
 
     def update(self, dt):
         self.position += self.velocity * dt
+
+    def get_rect(self):
+        return pygame.Rect(self.position.x, self.position.y, self.radius, self.radius)
