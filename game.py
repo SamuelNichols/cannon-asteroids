@@ -65,8 +65,10 @@ class Game:
 
             for a in asteroids:
                 if a.is_colliding(player):
-                    # self.game_over()
-                    pass
+                    if constants.DEBUG_ENABLED:
+                        pass
+                    else:
+                        self.game_over()
                 else:
                     for s in shots:
                         if a.is_colliding(s):

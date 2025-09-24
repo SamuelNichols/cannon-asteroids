@@ -12,7 +12,7 @@ class CircleShape(pygame.sprite.Sprite):
         self.velocity = pygame.Vector2(0, 0)
         self.radius = radius
         self.collision = collision
-        self.show_hitbox = False
+        self.show_hitbox = constants.DEBUG_ENABLED
 
     def get_position(self):
         return self.position

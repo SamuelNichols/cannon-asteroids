@@ -11,7 +11,7 @@ class Player(CircleShape):
         self.shoot_cooldown = 0
         self.idle_sprite = a_ss.ASTEROID_SS.create_sprite(a_ss.IDLE_SHIP_RECT, 1, 90)
         self.moving_sprite = a_ss.ASTEROID_SS.create_sprite(a_ss.MOVING_SHIP_RECT, 1, 90)
-        self.show_hitbox = True
+        self.show_hitbox = constants.DEBUG_ENABLED
         self.velocity = 0
 
     def draw(self, screen):
@@ -52,8 +52,6 @@ class Player(CircleShape):
         
         if keys[pygame.K_w]: # move up
             self.accelerate(True, constants.PLAYER_ACCELERATE_SPEED) 
-        elif keys[pygame.K_s]: # move down
-            self.accelerate(False, constants.PLAYER_ACCELERATE_SPEED)
         else: # decelerate in opposite direction
             if self.velocity > 0:
                 self.accelerate(False, constants.PLAYER_DECELERATE_SPEED)
@@ -64,7 +62,7 @@ class Player(CircleShape):
 
     def shoot(self, dt):
         if self.shoot_cooldown <= 0:
-            s = Shot(self.position.x, self.position.y)
-            s.velocity = pygame.Vector2(0, 1).rotate(self.rotation) * constants.PLAYER_SHOOT_SPEED
+            velocity = pygame.Vector2(0, 1).rotate(self.rotation) * (constants.PLAYER_SHOOT_SPEED + self.velocity)
+            s = Shot(self.position.x, self.position.y, velocity=velocity, shot_distance=constants.MAX_SHOT_DISTANCE)
             self.shoot_cooldown = constants.PLAYER_SHOOT_COOLDOWN
 

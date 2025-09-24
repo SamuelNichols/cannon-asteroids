@@ -3,21 +3,23 @@ import constants
 from circleshape import CircleShape
 
 class Shot(CircleShape):
-    def __init__(self, x, y):
+    def __init__(self, x, y, velocity, shot_distance):
         super().__init__(x, y, constants.SHOT_RADIUS)
-        self.origin = pygame.Vector2(x, y)
+        self.velocity = velocity
+        self.time = 0
+        
+        self.show_hitbox = constants.DEBUG_ENABLED
 
     def draw(self, screen):
         pygame.draw.circle(screen, constants.SHOT_COLOR, pygame.Vector2(self.position.x, self.position.y), self.radius)
 
     def update(self, dt):
-        new_pos = self.position + (self.velocity * dt)
-        new_dest = self.origin.distance_to(new_pos)
-        if new_dest > constants.MAX_SHOT_DISTANCE:
+        self.time += dt
+        if self.time > constants.MAX_SHOT_DISTANCE:
             self.kill()
-        elif new_dest == constants.MAX_SHOT_DISTANCE:
-            self.position = new_pos
+        elif self.time == constants.MAX_SHOT_DISTANCE:
+            self.position += self.velocity * dt
             self.kill()
         else:
-            self.position = new_pos
+            self.position += self.velocity * dt
 
