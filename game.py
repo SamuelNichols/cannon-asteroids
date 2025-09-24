@@ -36,11 +36,12 @@ class Game:
         drawable = pygame.sprite.Group()
         asteroids = pygame.sprite.Group()
         shots = pygame.sprite.Group()
+        screen_wrap = pygame.sprite.Group()
 
-        Player.containers = (updatable, drawable)
-        Asteroid.containers = (updatable, drawable, asteroids)
+        Player.containers = (updatable, drawable, screen_wrap)
+        Asteroid.containers = (updatable, drawable, asteroids, screen_wrap)
         AsteroidField.containers = (updatable)
-        Shot.containers = (updatable, drawable, shots)
+        Shot.containers = (updatable, drawable, shots, screen_wrap)
 
         # create objects
         player = Player(constants.SCREEN_WIDTH/2, constants.SCREEN_HEIGHT/2)
@@ -52,27 +53,27 @@ class Game:
             # TODO: make background spacey
             self.screen.fill("black")
 
+
+            for i in screen_wrap:
+                i.reposition(self.screen_rect)
+
             for u in updatable:
                 u.update(self.dt)
+
             for d in drawable:
                 d.draw(self.screen)
+
             for a in asteroids:
-                # asteroid cleanup
-                if not self.screen_rect.colliderect(a.get_rect()):
-                    a.kill()
                 if a.is_colliding(player):
-                    self.game_over()
+                    # self.game_over()
+                    pass
                 else:
                     for s in shots:
                         if a.is_colliding(s):
                             a.split()
                             s.kill()
-            
-            for s in shots:
-                # shot cleanup
-                if not self.screen_rect.colliderect(s.get_rect()):
-                    s.kill()
-            
+
+
             pygame.display.flip()
             # handle events
             self.handle_event()

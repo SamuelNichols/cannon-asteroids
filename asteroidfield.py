@@ -4,6 +4,9 @@ import constants
 from asteroid import Asteroid
 
 class AsteroidField(pygame.sprite.Sprite):
+    # edges are comprised of a unit vector representing the 
+    #   direction (of the velocity) 
+    #   function that returns a location on that edge (length of the edgy multiplied by a uniform random value of 0 to 1)
     edges = [
         [
             pygame.Vector2(1, 0),
