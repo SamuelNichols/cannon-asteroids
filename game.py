@@ -4,7 +4,8 @@ from player import Player
 from asteroid import Asteroid
 from asteroidfield import AsteroidField
 from shot import Shot
-from spritesheet import SpriteSheet, Sprite
+from stat_manager import StatsManager
+from scoreboard import Scoreboard
 
 class Game:
     def __init__(self):
@@ -42,9 +43,12 @@ class Game:
         Asteroid.containers = (updatable, drawable, asteroids, screen_wrap)
         AsteroidField.containers = (updatable)
         Shot.containers = (updatable, drawable, shots, screen_wrap)
+        Scoreboard.containers = (updatable, drawable)
 
         # create objects
         player = Player(constants.SCREEN_WIDTH/2, constants.SCREEN_HEIGHT/2)
+        stat_manager = StatsManager()
+        _scoreboard = Scoreboard(stat_manager)
         _asteroid_field = AsteroidField()
 
         # begin game loop
@@ -72,9 +76,9 @@ class Game:
                 else:
                     for s in shots:
                         if a.is_colliding(s):
+                            stat_manager.hit_asteroid(a)
                             a.split()
                             s.kill()
-
 
             pygame.display.flip()
             # handle events
